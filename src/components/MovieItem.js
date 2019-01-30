@@ -9,7 +9,9 @@ class MovieItem extends Component {
                     <img src={`https://image.tmdb.org/t/p/w185/${this.props.movie.poster_path}`} />
                 </figcaption>
                 <figcaption>
-                    <p>{ this.props.movie.title }</p>
+                    <p>Title: { this.props.movie.title }</p>
+                    <p>Popularity: { this.props.movie.popularity }</p>
+                    <p>Vote avg: { this.props.movie.vote_average }</p>
                     <ul className="genres">
                         {this.props.genres.map(genre => (
                             <li key={genre}>{genre}</li>

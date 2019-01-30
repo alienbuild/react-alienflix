@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import cloneDeep from 'lodash/cloneDeep';
 import Filters from './components/filters/Filters';
 import NowPlaying from './components/NowPlaying';
 import './App.css';
@@ -15,11 +14,12 @@ class App extends Component {
     state = {
         movies: [],
         genres: [],
-        isLoaded: false
+        isLoaded: false,
+        selectedMovies: []
     };
 
     // Fire API on init
-    componentWillMount() {
+    componentDidMount() {
         // Fetch Genre Data
         axios.get(`${base_url}genre/movie/list?api_key=${api_key}`)
             .then(res => this.setState({ genres: res.data.genres }));
@@ -28,33 +28,51 @@ class App extends Component {
         axios.get(`${base_url}movie/now_playing?api_key=${api_key}&language=en-US&page=1`)
             .then(res => this.setState({
                 movies: res.data.results,
-                isLoaded: true
+                isLoaded: true,
+                defaultData: res.data.results //this will store default data
             }));
     }
 
-    // Update/Filter movies
-    updateMovies = (e) => {
+    // Super filter
+    superFilter = (e) => {
+        if (e.target.type === "checkbox") {
+            // User wants to filter by genre
+            this.genreFilter(e);
+        } else if (e.target.type === "range") {
+            // User wants to filter by popularity
+            this.popularityFilter(e);
+        }
+    };
+
+    // Update / Filter movies by Genre
+    genreFilter = (e) => {
         if (e.target.checked) {
             const currState = [...this.state.movies];
             const newState = currState.filter(movies => movies.genre_ids.includes(parseInt(e.target.name)));
-            this.setState(prevState => ({
+            this.setState(() => ({
                 movies: newState
             }));
         } else {
-            this.setState(prevState => ({
-                movies: prevState.movies
-            }));
-            console.log(this.state.movies);
+            this.setState ({ movies: this.state.defaultData }); // default data
         }
+    };
+
+    // Update / Filter movies by Popularity
+    popularityFilter = (e) => {
+        const currState = [...this.state.defaultData];
+        const newState = currState.filter(movies => movies.vote_average > e.target.value);
+        this.setState(() => ({
+            movies: newState
+        }));
     };
 
   render() {
     return (
       <div className="App">
           <Filters
-              updateMovies={this.updateMovies}
+              genreFilter={this.genreFilter}
               genres={this.state.genres}
-              currentMovies={this.state.movies}
+              superFilter={this.superFilter}
           />
           <NowPlaying
               movies={this.state.movies}
