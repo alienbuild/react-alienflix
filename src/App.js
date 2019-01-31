@@ -15,7 +15,8 @@ class App extends Component {
         movies: [],
         genres: [],
         isLoaded: false,
-        selectedMovies: []
+        selectedMovies: [],
+        filters: []
     };
 
     // Fire API on init
@@ -29,9 +30,20 @@ class App extends Component {
             .then(res => this.setState({
                 movies: res.data.results,
                 isLoaded: true,
-                defaultData: res.data.results //this will store default data
+                selectedMovies: res.data.results,
+                defaultData: res.data.results //this will store default data,
             }));
     }
+
+    removeDuplicates = (arr, getHash) => {
+        const seen = new Set();
+        return arr.filter(candidate => {
+            const hash = getHash(candidate);
+            if (seen.has(hash)) return false;
+            seen.add(hash);
+            return true;
+        })
+    };
 
     // Super filter
     superFilter = (e) => {
@@ -46,15 +58,68 @@ class App extends Component {
 
     // Update / Filter movies by Genre
     genreFilter = (e) => {
+        // Grab Filter ID Number
+        const eNum = parseInt(e.target.name);
+        const activeFilters = this.state.filters;
+
+        // Copy current state and init new state
+        const currState = [...this.state.movies];
+        let newState = "";
+
+        // User wants to apply a filter
         if (e.target.checked) {
-            const currState = [...this.state.movies];
-            const newState = currState.filter(movies => movies.genre_ids.includes(parseInt(e.target.name)));
-            this.setState(() => ({
-                movies: newState
-            }));
-        } else {
-            this.setState ({ movies: this.state.defaultData }); // default data
+
+            // Create new state
+            newState = currState.filter(movies => movies.genre_ids.includes(eNum));
+
+            // Add filter ID into state array
+            activeFilters.indexOf(eNum) === -1 ? activeFilters.push(eNum) : console.log("Checked", eNum);
+            console.log('Active filters: ', activeFilters);
+
+            // Set the states
+            this.setState((prevState) => {
+                if (prevState) {
+                    return {
+                        movies: newState,
+                        filters: activeFilters,
+                    }
+                }
+            });
+
+        } else if (e.target.checked === false){
+            // Remove filter ID from state array
+            let filteredItems = activeFilters.filter(item => item !== eNum);
+            console.log('Active filters: ', filteredItems);
+
+            // Create new state
+            const defaultState = [...this.state.defaultData];
+            let myNewState = [];
+
+            // Iterate each movie and cross reference genres
+            defaultState.forEach(function (item) {
+                item.genre_ids.filter(movies => {
+                    if (filteredItems.includes(movies)) {
+                        myNewState.push(item);
+                    }
+                });
+            });
+
+            // Remove any duplicates in state
+             const filteredState = this.removeDuplicates(
+                 myNewState,
+                a => a.id
+            );
+
+            // Set the states
+            this.setState(() => {
+                return {
+                    movies: filteredState.length === 0 ? this.state.defaultData : filteredState,
+                    filters: filteredItems
+                }
+            });
+
         }
+
     };
 
     // Update / Filter movies by Popularity
