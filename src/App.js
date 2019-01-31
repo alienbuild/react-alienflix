@@ -3,6 +3,7 @@ import axios from 'axios';
 import Filters from './components/filters/Filters';
 import NowPlaying from './components/NowPlaying';
 import './App.css';
+import Logo from './assets/images/logo.svg'
 
 // TMDB Info/Credentials
 const base_url = "https://api.themoviedb.org/3/";
@@ -131,9 +132,23 @@ class App extends Component {
         }));
     };
 
+    // Toggle Filters
+    exposeFilters = (e) => {
+        e.preventDefault();
+        const el = document.querySelector('#filters');
+        el.classList.toggle('active');
+    };
+
   render() {
     return (
       <div className="App">
+          <button id="toggle-filters" onClick={this.exposeFilters}></button>
+          <header>
+              <h1><a href="/" id="main-logo">
+                  <img src={Logo} alt="AlienFlix Logo" width="200"/>
+              </a></h1>
+              <p>Find out what pixels humans are watching right now ...</p>
+          </header>
           <Filters
               genreFilter={this.genreFilter}
               genres={this.state.genres}

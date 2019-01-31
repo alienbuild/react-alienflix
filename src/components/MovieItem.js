@@ -5,13 +5,12 @@ class MovieItem extends Component {
     render() {
         return (
             <li className="movie">
-                <figcaption>
+                <figure>
                     <img src={`https://image.tmdb.org/t/p/w185/${this.props.movie.poster_path}`} />
-                </figcaption>
+                </figure>
+                <span className={this.props.movie.vote_average < 6 ? 'vote-avg low' : 'vote-avg high'}>{ this.props.movie.vote_average }</span>
                 <figcaption>
-                    <p>Title: { this.props.movie.title }</p>
-                    <p>Popularity: { this.props.movie.popularity }</p>
-                    <p>Vote avg: { this.props.movie.vote_average }</p>
+                    <h3>{ this.props.movie.title }</h3>
                     <ul className="genres">
                         {this.props.genres.map(genre => (
                             <li key={genre}>{genre}</li>

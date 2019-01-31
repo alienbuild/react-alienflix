@@ -18,13 +18,17 @@ class NowPlaying extends Component {
     };
 
     render() {
-        return this.props.movies.map((movie) => (
-           <MovieItem
-               key={movie.id}
-               movie={movie}
-               genres={this.getGenres(movie.genre_ids, this.props.genres)}
-           />
-        ));
+        return (
+            <ul class="movie-list">
+                {this.props.movies.map((movie) => (
+                    <MovieItem
+                        key={movie.id}
+                        movie={movie}
+                        genres={this.getGenres(movie.genre_ids, this.props.genres)}
+                    />
+                ))}
+            </ul>
+        );
     }
 }
 
