@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route } from "react-router-dom";
 import axios from 'axios';
 import Filters from './components/filters/Filters';
 import NowPlaying from './components/NowPlaying';
 import './App.css';
-import Logo from './assets/images/logo.svg'
+import Header from './components/Header';
+
+// Pages
+import MoviePage from './pages/Movie';
+import About from './pages/About';
 
 // TMDB Info/Credentials
 const base_url = "https://api.themoviedb.org/3/";
@@ -139,26 +144,32 @@ class App extends Component {
         el.classList.toggle('active');
     };
 
+
+
   render() {
     return (
-      <div className="App">
-          <button id="toggle-filters" onClick={this.exposeFilters}></button>
-          <header>
-              <h1><a href="/" id="main-logo">
-                  <img src={Logo} alt="AlienFlix Logo" width="200"/>
-              </a></h1>
-              <p>Find out what pixels humans are watching right now ...</p>
-          </header>
-          <Filters
-              genreFilter={this.genreFilter}
-              genres={this.state.genres}
-              superFilter={this.superFilter}
-          />
-          <NowPlaying
-              movies={this.state.movies}
-              genres={this.state.genres}
-          />
-      </div>
+        <BrowserRouter>
+            <div className="App">
+                <Header />
+                <Route path="/" exact render={() => (
+                    <div id="homepage">
+                        <button id="toggle-filters" onClick={this.exposeFilters}></button>
+                        <Filters
+                            genreFilter={this.genreFilter}
+                            genres={this.state.genres}
+                            superFilter={this.superFilter}
+                        />
+                        <NowPlaying
+                            movies={this.state.movies}
+                            genres={this.state.genres}
+                        />
+                    </div>
+                    )
+                }/>
+                <Route path="/movie/:id" component={MoviePage} />
+                <Route path="/about" component={About} />
+            </div>
+        </BrowserRouter>
     );
   }
 }
