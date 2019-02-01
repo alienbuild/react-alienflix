@@ -325,24 +325,41 @@ aside#filters{
   main{
     padding: 30px;
     background: #fff;
-    overflow: hidden;
+    &:after{
+      content:"";
+      clear: both;
+      height: 0px;
+      width: 100%;
+      overflow: hidden;
+      display: block;
+    }
     h1{
       color: #333;
       text-align: left;
       margin-top: 0px;
     }
+    .column-1,.column-2{ padding: 0 10px;}
     .column-1{
       @include column(4,12);
+      position: relative;
       @media screen and (max-width: 767px){
         @include column(12);
         margin-bottom: 30px;
       }
-      img{
+      img.poster{
         max-width: 100%;
         margin: auto;
+        margin-top: -150px;
+        border: 5px solid #262845;
+        transition: 0.6s all;
+        &.active{
+          margin-top: 0px;
+          transition: 0.6s all;
+        }
       }
     }
     .column-2{
+      position: relative;
       @include column(8,12);
       @media screen and (max-width: 767px){
         @include column(12);

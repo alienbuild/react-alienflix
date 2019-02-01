@@ -35,9 +35,13 @@ class MoviePage extends Component {
 
     toggleVideo = () => {
 
-        // Show modal
+        // Grab video placeholder
         const trailers = document.querySelector('.trailer-wrap');
         trailers.classList.toggle('active');
+
+        // Move poster out the way
+        const poster = document.querySelector('.poster');
+        poster.classList.toggle('active');
 
         // Set video
         const key = this.state.trailers.results[0].key;
@@ -73,10 +77,10 @@ class MoviePage extends Component {
                 {/*Main Start*/}
                 <main>
                     <div className="column-1">
-                        <img src={`https://image.tmdb.org/t/p/w500/${this.state.movieData.poster_path}`}/>
+                        <img src={`https://image.tmdb.org/t/p/w500/${this.state.movieData.poster_path}`} className="poster"/>
                     </div>
-                    <h1 className="title">{ this.state.movieData.title }</h1>
                     <div className="column-2">
+                        <h1 className="title">{ this.state.movieData.title }</h1>
                         <ul>
                             <li className={this.state.movieData.status === 'Released' ? 'status released' : 'status'}>{ this.state.movieData.status } </li>
                             <li>Runtime: { this.state.movieData.runtime }</li>
