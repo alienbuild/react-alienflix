@@ -8,7 +8,6 @@ function Header(){
             <h1><a href="/" id="main-logo">
                 <img src={Logo} alt="AlienFlix Logo" width="200"/>
             </a></h1>
-            <p>Find out what pixels humans are watching right now ...</p>
         </header>
     )
 }

@@ -41,6 +41,8 @@ class App extends Component {
             }));
     }
 
+
+
     removeDuplicates = (arr, getHash) => {
         const seen = new Set();
         return arr.filter(candidate => {

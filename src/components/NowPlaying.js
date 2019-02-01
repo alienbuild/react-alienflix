@@ -17,23 +17,29 @@ class NowPlaying extends Component {
 
     };
 
+
+
     render() {
+        const movies = [...this.props.movies].sort( (a,b) => a.vote_average - b.vote_average ).reverse();
         return (
-            <ul class="movie-list">
-                {this.props.movies.map((movie) => (
+            <ul className="movie-list">
+                {movies.map((movie) => (
                     <MovieItem
                         key={movie.id}
                         movie={movie}
                         genres={this.getGenres(movie.genre_ids, this.props.genres)}
                     />
                 ))}
+                <li className="movie">
+                    <button className="pagination"></button>
+                </li>
             </ul>
         );
     }
 }
 
-// NowPlaying.propTypes = {
-//     movies: PropTypes.array.isRequired
-// };
+NowPlaying.propTypes = {
+    movies: PropTypes.array.isRequired
+};
 
 export default NowPlaying;
